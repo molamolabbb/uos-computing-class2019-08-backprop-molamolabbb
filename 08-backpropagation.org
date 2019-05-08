@@ -256,6 +256,62 @@ plt.savefig("XOR_turnon_untrained.png")
   used other than the fact that we can differentiate it
   - Implies that any activation function will work for backpropagation
 
+** Saturation
+
+***                                                                   :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: .7
+    :END:
+
+#+begin_export latex
+\centering
+\begin{neuralnetwork}[height=3,layerspacing=3.5cm,nodespacing=1.25cm]
+ \newcommand{\x}[2]{{\ifthenelse{\equal{#2}{2}}{$a^{l-1}_k$}{}}}
+% \newcommand{\y}[2]{$a^{l+1}_#2$}
+ \newcommand{\y}[2]{}
+ \newcommand{\hfirst}[2]{\small $a^{l}_j = \sigma(z^l_j)$}
+ \newcommand{\hsecond}[2]{\small $a^{(l)}_j$}
+ 
+ \newcommand{\linklabelsA}[4]{$w^l_{jk}$}
+
+ \inputlayer[count=3, bias=false, title=, text=\x]
+ \hiddenlayer[count=1, bias=false, title=, text=\hfirst] \linklayers
+ \link[from layer=0, to layer=1, from node=2, to node=1, label=\linklabelsA]
+
+ % from layer=#1, from node=#2, to layer=#3, to node=#4
+ \newcommand{\mylinktextp}[4] {$w^{l+1}_{#4j} \delta^l_{#4}$}
+ \setdefaultlinklabel{\mylinktextp}
+ \outputlayer[count=3, title=, text=\y] \linklayers
+\end{neuralnetwork}
+#+end_export
+
+***                                                                   :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: .3
+    :END:
+#+attr_latex: :width .8\textwidth
+[[file:sigmoid.png]]
+
+#+attr_latex: :width .8\textwidth
+[[file:dsigmoid.png]]
+
+***                                                         :B_ignoreheading:
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :END:
+
+- Look at the diagram again and the equation: \(\frac{\partial
+  L}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j\), \(\frac{\partial
+  L}{\partial b^l_{j}} = \delta^l_j\)
+- Note a few things:
+  - If \(a^{l-1}_k\) is close to 0, the weight \(w^l_{jk}\) won't learn. Only
+    inputs which turn on the previous node can cause a weight to learn
+  - If \(\delta^l_j \propto \sigma'(z^l_j) = a^l_j (1 - a^l_j)\) is
+    close to 0 (fully activated or fully deactivated), the node won't learn
+- It could be the case that a node is fully active/deactive for all inputs
+- The case where a node gets stuck from this is called "saturation"
+# - Other activation functions can avoid this gradient saturation
+
 ** Backpropagation Equations and Operation
 
 \vspace{-5.5mm}
