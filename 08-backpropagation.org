@@ -258,12 +258,31 @@ plt.savefig("XOR_turnon_untrained.png")
 
 ** Backpropagation Equations and Operation
 
-*** 
+\vspace{-5.5mm}
+*** Equations of Backprop                                             :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: .4
+    :END:
+
+**** 
+
 - \(\delta^L_j = (a^L_j - y_j) \sigma'(z^L_j)\)
 - \(\delta^l_j = \sigma'(z^l_j) \sum_{k'} w^{l+1}_{k'j} \delta^{l+1}_{k'} \)
-- \(\frac{\partial L}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j\)
-- \(\frac{\partial L}{\partial b^l_{j}} = \delta^l_j\)
-- TODO: WRITE OUT DEFNS of a vs z
+- \(\frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k \delta^l_j\)
+- \(\frac{\partial C}{\partial b^l_{j}} = \delta^l_j\)
+
+*** Reminder                                                          :BMCOL:
+    :PROPERTIES:
+    :BEAMER_col: .55
+    :END:
+
+**** 
+
+- \(a^l_j = \sigma(z^l_j)\)
+- \(z^l_j = b^l_j + \sum_k w^l_{jk} a^{l-1}_k\)
+- \(\sigma'(x) = \sigma(x) (1 - \sigma(x))\)
+- \(\sigma(x) = \frac{1}{1 + e^{-x}}\)
+- \(C(x, y) = \frac{1}{2} \sum_i (y_i - a^L_i)\) where \(a^L_i\) is calculated with input \(a^0_i=x_i\)
 
 ***                                                         :B_ignoreheading:
     :PROPERTIES:
@@ -273,7 +292,7 @@ plt.savefig("XOR_turnon_untrained.png")
 - In the same way that the \(a^l_j\) are wrapping up the weighted sums
   and activations of the layers feeding forward, the \(\delta^l_j\)
   wrap up the partial derivatives of the chain rule which must be
-  expanding from the cost function
+  expanded from the cost \(C\)
   - Hopefully, you can see how the proof for the transfer to previous
     layer would work by running further expansions of \(a^{L-1}_k\) on
     the previous page
@@ -281,44 +300,7 @@ plt.savefig("XOR_turnon_untrained.png")
   \(\frac{\partial C}{\partial w^l_{jk}}\), \(\delta^l_j\)  backward
 - And then use this to find \(\frac{\partial C}{\partial b^l_{j}}\) and run our SGD
   - The hardest part is keeping track of all the indices (!)
-
-** Gradient Descent on a Neural Network                            :noexport:
-
-
-- \(y = f(x_1, x_2) = \beta^0_0 + \beta^0_1 \sigma(\beta^1_0 +
-  \beta^1_1 x_1 + \beta^1_2 x_2) + \beta^0_2 \sigma(\beta^2_0 +
-  \beta^2_1 x_1 + \beta^2_2 x_2)\)
-- \(C = (y - t)^2\), the loss function we will try to minimize
-- To train gradient descent, we will need to find the partial
-  derivatives of the \(\beta^i_j\): \(\partial L / \partial \beta^i_j
-  = \partial L / \partial y \cdot \partial y / \partial \beta^i_j \)
-
-** Sigmoid                                                         :noexport:
-
-#+begin_src python :session :exports none
-import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.linspace(-5, 5, 1000)
-y = 1./(1.+np.exp(-x))
-
-plt.clf()
-plt.plot(x, y)
-plt.savefig('sigmoid.png')
-
-yp = y * (1 - y)
-plt.clf()
-plt.plot(x, yp)
-plt.savefig('dsigmoid.png')
-#+end_src
-
-#+RESULTS:
-| <matplotlib.lines.Line2D | object | at | 0x7f8f0edf5860> |
-
-** Backprop info                                                   :noexport:
-
-- Without backprop, need to take factorial derivatives
-- With backprop, limit to only the number of nodes
+  - Conceptually, the \(w^l_{jk}\) and \(b^l_{j}\) live on the edges between the nodes
 
 * Exercises
 
